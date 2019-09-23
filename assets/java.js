@@ -18,21 +18,18 @@ var database = firebase.database();
 $("#add-train-btn").on("click", function () {
 
     event.preventDefault();
-
-
     //get users input:
     var trainName = $("#train-name-input").val().trim();
     var destination = $("#destination-input").val().trim();
     var frequency = $("#frequency-input").val().trim();
     //get time stamp
     var startTimeInput = $("#start-input").val().trim();
-    console.log(startTime)
 
     //prevent submiting empty boxes to table:
-    // if (!trainName || !destination || !startTime || !frequency){
-    //     alert("Please enter all the required information")
-    //     return false
-    // }
+    if (!trainName || !destination || !startTimeInput || !frequency){
+        alert("Please enter all the required information")
+        return false
+    }
     //create local object for variables:
     var newTrain = {
         name: trainName,
@@ -51,28 +48,38 @@ $("#add-train-btn").on("click", function () {
     $("#start-input").val("");
 
 
+})
+
+database.ref().on("child_added", function (childSnapshot) {
+
+    var trainName = childSnapshot.val().name;
+    var destination = childSnapshot.val().destination;
+    var frequency = childSnapshot.val().frequency;
+    //get time stamp
+    var startTimeInput = childSnapshot.val().start;
+
     var timeFormat = "HH:mm";
+
     var startTime = moment(startTimeInput, timeFormat).subtract(1, "years");
     //calculate difference between start time to now:
     var diffTime = moment().diff(moment(startTime), "minutes")
-    // console.log(startTimeInput)
-    // console.log(diffTime)
 
     //calculate time apart:
     var tRemainder = diffTime % frequency;
-    var tMinutesTillTrain = frequency - tRemainder;
-    //console.log(tMinutesTillTrain)
+    var tMinutesAway = frequency - tRemainder;
+    //console.log(tMinutesAway)
     //add minutes till train to current time:
-    var nextTrain = moment().add(tMinutesTillTrain, "minutes")
-    //prettify time:
-    moment(nextTrain).format("hh:mm A")
+    var nextTrain = moment(moment().add(tMinutesAway, "minutes")).format("hh:mm A")
 
-})
+    //create a new row
+    var newRow = $("<tr>").append(
+        $("<td>").text(trainName),
+        $("<td>").text(destination),
+        $("<td>").text(frequency),
+        $("<td>").text(nextTrain),
+        $("<td>").text(tMinutesAway),
+    )
 
-database.ref().on("child_added", function(childSnapshot){
-
-    
-
-
-
+    //push to html table body
+    $("#table-row").append(newRow)
 })
