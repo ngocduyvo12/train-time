@@ -57,6 +57,8 @@ database.ref().on("child_added", function (childSnapshot) {
     var startTimeInput = childSnapshot.val().start;
     //set time format
     var timeFormat = "HH:mm";
+
+    //created variable for initial time
     var startTime = moment(startTimeInput, timeFormat).subtract(1, "years");
     //calculate difference between start time to now:
     var diffTime = moment().diff(moment(startTime), "minutes")
