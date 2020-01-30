@@ -25,7 +25,7 @@ $("#add-train-btn").on("click", function () {
     //get time stamp
     var startTimeInput = $("#start-input").val().trim();
 
-    //prevent submiting empty boxes to table:
+    //prevent submitting empty boxes to table:
     if (!trainName || !destination || !startTimeInput || !frequency){
         alert("Please enter all the required information")
         return false
@@ -46,8 +46,6 @@ $("#add-train-btn").on("click", function () {
     $("#destination-input").val("");
     $("#frequency-input").val("");
     $("#start-input").val("");
-
-
 })
 
 database.ref().on("child_added", function (childSnapshot) {
@@ -57,9 +55,8 @@ database.ref().on("child_added", function (childSnapshot) {
     var frequency = childSnapshot.val().frequency;
     //get time stamp
     var startTimeInput = childSnapshot.val().start;
-
+    //set time format
     var timeFormat = "HH:mm";
-
     var startTime = moment(startTimeInput, timeFormat).subtract(1, "years");
     //calculate difference between start time to now:
     var diffTime = moment().diff(moment(startTime), "minutes")
