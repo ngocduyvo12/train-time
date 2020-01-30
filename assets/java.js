@@ -66,7 +66,7 @@ database.ref().on("child_added", function (childSnapshot) {
     //calculate time apart:
     var tRemainder = diffTime % frequency;
     var tMinutesAway = frequency - tRemainder;
-    //console.log(tMinutesAway)
+
     //add minutes till train to current time:
     var nextTrain = moment(moment().add(tMinutesAway, "minutes")).format("hh:mm A")
 
